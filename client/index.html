@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Include the CSS files -->
+        <link rel="stylesheet" href="style.css" />
+        <!-- Include socket.io and the JavaScript files -->
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"
+            defer
+        ></script>
+        <script src="socket.js" defer></script>
+
+        <title>Tic Tac Toe Game</title>
+    </head>
+
+    <body>
+        <!-- Game info text -->
+        <div class="game-info-text">
+            <div id="title">Tic Tac Toe!</div>
+            <div id="playerInfoText"></div>
+            <div id="gameInfoText">Waiting for another player...</div>
+        </div>
+
+        <!-- The Game Board -->
+        <div class="board" id="board">
+            <div class="cell" id="x0y0" onclick="turn(0,0)"></div>
+            <div class="cell" id="x0y1" onclick="turn(0,1)"></div>
+            <div class="cell" id="x0y2" onclick="turn(0,2)"></div>
+            <div class="cell" id="x1y0" onclick="turn(1,0)"></div>
+            <div class="cell" id="x1y1" onclick="turn(1,1)"></div>
+            <div class="cell" id="x1y2" onclick="turn(1,2)"></div>
+            <div class="cell" id="x2y0" onclick="turn(2,0)"></div>
+            <div class="cell" id="x2y1" onclick="turn(2,1)"></div>
+            <div class="cell" id="x2y2" onclick="turn(2,2)"></div>
+        </div>
+
+        <!-- Game Over Text-->
+        <div class="winning-message" id="winningMessage">
+            <div id="winningMessageText"></div>
+            <button id="startButton" onclick="start()">let's Go!</button>
+        </div>
+    </body>
+</html>

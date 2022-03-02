@@ -1,0 +1,193 @@
+/* Variables */
+:root {
+    --main-text-color: rgb(255, 254, 254);
+    --cell-size: 100px;
+    --cell-border-color: rgb(248, 247, 247);
+    --cell-color: black;
+    --mark-size: calc(var(--cell-size) * 0.9);
+    --x-color: red;
+    --x-transparent-color: lightcoral;
+    --circle-color: blue;
+    --circle-transparent-color: lightskyblue;
+    --text-color: white;
+    --winning-message-bg-color: rgba(0, 0, 0, 0.9);
+    --winning-message-button-color-1: black;
+    --winning-message-button-color-2: white;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.hide {
+    display: none !important;
+}
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color:black;
+    margin: 0;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(1, auto);
+}
+
+/* Board properties */
+.board {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(3, auto);
+}
+
+/* Cell properties */
+.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: var(--cell-color);
+    border: 1px solid var(--cell-border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Delete the border around the board */
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+    border-top: none;
+}
+.cell:nth-child(3n + 1) {
+    border-left: none;
+}
+.cell:nth-child(3n + 3) {
+    border-right: none;
+}
+.cell:last-child,
+.cell:nth-child(7),
+.cell:nth-child(8) {
+    border-bottom: none;
+}
+
+/* Cells with an object are not allowed to be clicked */
+.cell.x,
+.cell.circle {
+    cursor: not-allowed;
+}
+
+/* Draw X */
+.cell.x::before,
+.cell.x::after {
+    background-color: var(--x-color);
+}
+
+.board.x .cell:not(.x):not(.circle):hover::before,
+.board.x .cell:not(.x):not(.circle):hover::after {
+    background-color: var(--x-transparent-color);
+}
+
+.cell.x::before,
+.cell.x::after,
+.board.x .cell:not(.x):not(.circle):hover::before,
+.board.x .cell:not(.x):not(.circle):hover::after {
+    content: '';
+    position: absolute;
+    width: calc(var(--mark-size) * 0.15);
+    height: var(--mark-size);
+}
+
+.cell.x::before,
+.board.x .cell:not(.x):not(.circle):hover::before {
+    transform: rotate(45deg);
+}
+
+.cell.x::after,
+.board.x .cell:not(.x):not(.circle):hover::after {
+    transform: rotate(-45deg);
+}
+
+/* Draw O */
+.cell.circle::before {
+    background-color: var(--circle-color);
+}
+
+.board.circle .cell:not(.x):not(.circle):hover::before,
+.board.circle .cell:not(.x):not(.circle):hover::after {
+    background-color: var(--circle-transparent-color);
+}
+
+.cell.circle::before,
+.cell.circle::after,
+.board.circle .cell:not(.x):not(.circle):hover::before,
+.board.circle .cell:not(.x):not(.circle):hover::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+}
+
+.cell.circle::before,
+.board.circle .cell:not(.x):not(.circle):hover::before {
+    width: var(--mark-size);
+    height: var(--mark-size);
+}
+
+.cell.circle::after,
+.board.circle .cell:not(.x):not(.circle):hover::after {
+    width: calc(var(--mark-size) * 0.7);
+    height: calc(var(--mark-size) * 0.7);
+    background-color: var(--cell-color);
+}
+
+/* Winning message properties */
+.winning-message {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--winning-message-bg-color);
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+    font-size: 3rem;
+    font-weight: bold;
+    flex-direction: column;
+}
+
+.winning-message button {
+    font-size: 3rem;
+    background-color: var(--winning-message-button-color-2);
+    border: 5px solid var(--winning-message-button-color-1);
+    border-radius: 5rem;
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 2rem;
+}
+
+.winning-message button:hover {
+    background-color: var(--winning-message-button-color-1);
+    color: var(--winning-message-button-color-2);
+    border-color: var(--winning-message-button-color-2);
+}
+
+.winning-message.show {
+    display: flex;
+}
+
+/* Game info text properties */
+.game-info-text {
+    color: var(--main-text-color);
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    margin: 3rem 0 3rem 0;
+}
