@@ -4,12 +4,9 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <!-- Include the CSS files -->
         <link rel="stylesheet" href="style.css" />
-        <!-- Include socket.io and the JavaScript files -->
         <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"
+         src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"
             defer
         ></script>
         <script src="socket.js" defer></script>
@@ -39,9 +36,9 @@
         </div>
 
         <!-- Game Over Text-->
-        <div class="winning-message" id="winningMessage">
-            <div id="winningMessageText"></div>
-            <button id="startButton" onclick="start()">let's Go!</button>
+        <div class="gameOver-msg" id="gameOver-msg">
+            <div id="gameOver-msgText"></div>
+            <button id="startButton" onclick="restart()">let's Go!</button>
         </div>
     </body>
 </html>

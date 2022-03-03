@@ -1,19 +1,18 @@
-const io = require('socket.io')({ cors: true });
-const Board = require('./board');
+const server = require('socket.io')({ cors: true });
+const BoardGame = require('./board');
 
 // Variables
 const port = 3000;
 let gameStarted = false;
 let gameOver = false;
-// The Players object, there are 2 players, 1,2 and each player will have his socket id stored in this object aswell
 let players = {
     1: '',
     2: '',
 };
 // Hold the id of the current active player
-let activePlayer = 1;
+let isActivePlayer = 1;
 
-// Add a player to the server with the socket id the player got and returns his playerId
+// Add a player to the server with the socket id 
 const addPlayerToServer = function (socketId) {
     for (const playerId in players) {
         if (players[playerId] === '') {
@@ -23,16 +22,15 @@ const addPlayerToServer = function (socketId) {
     }
 };
 
-// Gets an object and a value and return the key in the objects that holds the given value
+// Gets an object and a value and return the key 
 const getObjectKeyByValue = function (object, value) {
     return Object.keys(object).find(key => object[key] === value);
 };
 
 // Handle connection event of the socket
-io.on('connection', socket => {
+server.on('connection', socket => {
     // Only 2 clients can connect to the socket
-    if (io.sockets.sockets.size > 2) {
-        console.log(`Only 2 players are allowed to connect to the game!`);
+    if (server.sockets.sockets.size > 2) {
         socket.emit('playerLimitReached');
         socket.disconnect();
     }
@@ -44,15 +42,14 @@ io.on('connection', socket => {
     socket.emit('clientId', playerId);
 
     // Start the game when 2 players are connected to the socket
-    if (io.sockets.sockets.size === 2 && !gameStarted) {
+    if (server.sockets.sockets.size === 2 && !gameStarted) {
         gameStarted = true;
-        io.emit('start', activePlayer);
-        console.log('Game started');
+        server.emit('start', isActivePlayer);
     }
 
     // If the game already started continue it
     if (gameStarted) {
-        socket.emit('continue', activePlayer, Board.getBoard());
+        socket.emit('continue', isActivePlayer, BoardGame.getBoard());
     }
 
     // Handle the player turn event
@@ -60,41 +57,33 @@ io.on('connection', socket => {
         if (gameOver) return;
 
         // Register the player move on the board
-        Board.setCell(turn.row, turn.col, playerId);
-        console.log(`Player ${playerId} turn. Move: ${turn.row}, ${turn.col}`);
+        BoardGame.setCell(turn.row, turn.col, playerId);
 
         // Check if the game is over
-        const gameOverResult = Board.checkGameOver(playerId);
+        const gameOverResult = BoardGame.checkGameOver(playerId);
         gameOver = gameOverResult.gameOver;
-        // if the game is over log it and send a game over event with the gameOverResult object that holds if theres a winner and the winner id
-        // And reset the game afterward
+  
         if (gameOver) {
-            console.log(
-                gameOverResult.playerId === 0
-                    ? `Game Over! It's a Draw!`
-                    : `Game Over! The winner is ${playerId}!`
-            );
-
+    
             // send gameOver event to the clients
-            io.emit('gameOver', {
+            server.emit('gameOver', {
                 ...gameOverResult,
                 row: turn.row,
                 col: turn.col,
             });
 
             // Reset the game
-            Board.resetBoard();
+            BoardGame.resetBoard();
             gameStarted = false;
             gameOver = false;
-            activePlayer = 1;
-            // else - if the game is not yet over switch the active player and continue the game
+            isActivePlayer = 1;
         } else {
             // Switch players
-            activePlayer = activePlayer === 1 ? 2 : 1;
-            io.emit('turn', {
+            isActivePlayer = isActivePlayer === 1 ? 2 : 1;
+            server.emit('turn', {
                 row: turn.row,
                 col: turn.col,
-                nextPlayer: activePlayer,
+                nextPlayer: isActivePlayer,
             });
         }
     });
@@ -107,5 +96,11 @@ io.on('connection', socket => {
 });
 
 // Start the server
-io.listen(port);
-console.log(`Server is listening on port ${port}!`);
+server.listen(port,function(port,error){
+    if(error){
+        console.log(`erorr in server!`);
+    }
+
+    console.log(`Server is listening int http://localhost:`+ port);
+});
+
